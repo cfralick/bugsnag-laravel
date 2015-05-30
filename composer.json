@@ -1,5 +1,5 @@
 {
-    "name": "bugsnag/bugsnag-laravel",
+    "name": "cfralick/bugsnag-laravel",
     "description": "Official Bugsnag notifier for Laravel applications.",
     "keywords": ["bugsnag", "exceptions", "errors", "logging", "tracking", "laravel"],
     "homepage": "https://github.com/bugsnag/bugsnag-laravel",
