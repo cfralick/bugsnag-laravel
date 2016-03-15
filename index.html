@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bugsnag-laravel by cfralick</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Bugsnag-laravel</h1>
+        <p>Bugsnag notifier for the Laravel PHP framework</p>
+
+        <p class="view"><a href="https://github.com/cfralick/bugsnag-laravel">View the Project on GitHub <small>cfralick/bugsnag-laravel</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/cfralick/bugsnag-laravel/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/cfralick/bugsnag-laravel/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/cfralick/bugsnag-laravel">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="bugsnag-notifier-for-laravel-and-lumen" class="anchor" href="#bugsnag-notifier-for-laravel-and-lumen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bugsnag Notifier for Laravel and Lumen</h1>
+
+<p>The Bugsnag Notifier for Laravel gives you instant notification of errors and
+exceptions in your Laravel PHP applications. We support Laravel 5, Laravel 4, Laravel 3, and Lumen.</p>
+
+<p><a href="https://bugsnag.com">Bugsnag</a> captures errors in real-time from your web, 
+mobile and desktop applications, helping you to understand and resolve them 
+as fast as possible. <a href="https://bugsnag.com">Create a free account</a> to start 
+capturing errors from your applications.</p>
+
+<p>Check out this excellent <a href="https://laracasts.com/lessons/better-error-tracking-with-bugsnag">Laracasts screencast</a> for a quick overview of how to use Bugsnag with your Laravel apps.</p>
+
+<h2>
+<a id="how-to-install-" class="anchor" href="#how-to-install-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to Install </h2>
+
+<h3>
+<a id="laravel" class="anchor" href="#laravel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Laravel</h3>
+
+<ol>
+<li>
+<p>Install the <code>bugsnag/bugsnag-laravel</code> package</p>
+
+<div class="highlight highlight-source-shell"><pre>$ composer require bugsnag/bugsnag-laravel:1.<span class="pl-k">*</span></pre></div>
+</li>
+<li>
+<p>Update <code>config/app.php</code> (or <code>app/config/app.php</code> for Laravel 4) to activate Bugsnag</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c"># Add `BugsnagLaravelServiceProvider` to the `providers` array</span></span>
+<span class="pl-s1"><span class="pl-s"><span class="pl-pds">'</span>providers<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-k">...</span></span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"># Add the `BugsnagFacade` to the `aliases` array</span></span>
+<span class="pl-s1"><span class="pl-s"><span class="pl-pds">'</span>aliases<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-k">...</span></span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>Bugsnag<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Bugsnag\BugsnagLaravel\BugsnagFacade<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">)</span></pre></div>
+</li>
+<li>
+<p>(Laravel 5 only) Use the Bugsnag exception handler from <code>App/Exceptions/Handler.php</code>.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c"># DELETE this line</span></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Illuminate\Foundation\Exceptions\Handler</span> <span class="pl-k">as</span> <span class="pl-c1">ExceptionHandler</span>;</span></pre></div>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c"># ADD this line instead</span></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Bugsnag\BugsnagLaravel\BugsnagExceptionHandler</span> <span class="pl-k">as</span> <span class="pl-c1">ExceptionHandler</span>;</span></pre></div>
+
+<p>After this change, your file should look like this:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">&lt;</span>?<span class="pl-c1">php</span> <span class="pl-k">namespace</span> <span class="pl-en">App\Exceptions</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Exception</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Bugsnag\BugsnagLaravel\BugsnagExceptionHandler</span> <span class="pl-k">as</span> <span class="pl-c1">ExceptionHandler</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">Handler</span> <span class="pl-k">extends</span> <span class="pl-e">ExceptionHandler</span> {</span>
+<span class="pl-s1">    <span class="pl-k">...</span></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span></pre></div>
+</li>
+</ol>
+
+<h4>
+<a id="configuration-laravel-5" class="anchor" href="#configuration-laravel-5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration (Laravel 5)</h4>
+
+<ol>
+<li><p>Create a file <code>config/bugsnag.php</code> that contains your API key:</p></li>
+<li>
+<p>Configure your <code>api_key</code>:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">&lt;</span>?<span class="pl-c1">php</span> <span class="pl-c"># config/bugsnag.php</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>api_key<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>YOUR-API-KEY-HERE<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">);</span></pre></div>
+</li>
+<li>
+<p>Optionally, you can add the <code>notify_release_stages</code> key to the same file
+above to define which Laravel environments will send Exceptions to Bugsnag.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>api_key<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>YOUR-API-KEY-HERE<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>notify_release_stages<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [<span class="pl-s"><span class="pl-pds">'</span>production<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>staging<span class="pl-pds">'</span></span>]</span>
+<span class="pl-s1">);</span></pre></div>
+</li>
+</ol>
+
+<h4>
+<a id="configuration-laravel-34" class="anchor" href="#configuration-laravel-34" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration (Laravel 3,4)</h4>
+
+<ol>
+<li>
+<p>Generate a template Bugsnag config file</p>
+
+<div class="highlight highlight-source-shell"><pre>$ php artisan config:publish bugsnag/bugsnag-laravel</pre></div>
+</li>
+<li>
+<p>Update <code>app/config/packages/bugsnag/bugsnag-laravel/config.php</code> with your
+Bugsnag API key:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>api_key<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>YOUR-API-KEY-HERE<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">);</span></pre></div>
+</li>
+<li>
+<p>Optionally, you can add the <code>notify_release_stages</code> key to the same file
+above to define which Laravel environments will send Exceptions to Bugsnag.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>api_key<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>YOUR-API-KEY-HERE<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>notify_release_stages<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [<span class="pl-s"><span class="pl-pds">'</span>production<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>staging<span class="pl-pds">'</span></span>]</span>
+<span class="pl-s1">);</span></pre></div>
+</li>
+</ol>
+
+<h3>
+<a id="lumen" class="anchor" href="#lumen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lumen</h3>
+
+<ol>
+<li>
+<p>In <code>bootstrap/app.php</code> add the line</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$app</span><span class="pl-k">-&gt;</span>register(<span class="pl-s"><span class="pl-pds">'</span>Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider<span class="pl-pds">'</span></span>);</span></pre></div>
+
+<p>just before the line </p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">require</span> <span class="pl-c1">__DIR__</span> <span class="pl-k">.</span> <span class="pl-s"><span class="pl-pds">'</span>/../app/Http/routes.php<span class="pl-pds">'</span></span>;</span></pre></div>
+</li>
+<li>
+<p>Change the function <code>report</code> in <code>app/Exceptions/Handler.php</code> to look like this:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">report</span>(<span class="pl-c1">Exception</span> <span class="pl-smi">$e</span>) {</span>
+<span class="pl-s1">    app(<span class="pl-s"><span class="pl-pds">'</span>bugsnag<span class="pl-pds">'</span></span>)<span class="pl-k">-&gt;</span>notifyException(<span class="pl-smi">$e</span>, []);</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">parent</span><span class="pl-k">::</span>report(<span class="pl-smi">$e</span>);</span>
+<span class="pl-s1">}</span></pre></div>
+</li>
+<li>
+<p>Create a file <code>config/bugsnag.php</code> that contains your API key</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">&lt;</span>?<span class="pl-c1">php</span> <span class="pl-c"># config/bugsnag.php</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>api_key<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>YOUR-API-KEY-HERE<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">);</span></pre></div>
+</li>
+</ol>
+
+<h2>
+<a id="sending-custom-data-with-exceptions" class="anchor" href="#sending-custom-data-with-exceptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sending Custom Data With Exceptions</h2>
+
+<p>It is often useful to send additional meta-data about your app, such as 
+information about the currently logged in user, along with any
+error or exceptions, to help debug problems. </p>
+
+<p>To send custom data, you should define a <em>before-notify</em> function, 
+adding an array of "tabs" of custom data to the $metaData parameter. For example:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">Bugsnag</span><span class="pl-k">::</span>setBeforeNotifyFunction(<span class="pl-s"><span class="pl-pds">"</span>before_bugsnag_notify<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">function</span> <span class="pl-en">before_bugsnag_notify</span>(<span class="pl-smi">$error</span>) {</span>
+<span class="pl-s1">    <span class="pl-c">// Do any custom error handling here</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">// Also add some meta data to each error</span></span>
+<span class="pl-s1">    <span class="pl-smi">$error</span><span class="pl-k">-&gt;</span>setMetaData(<span class="pl-c1">array</span>(</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>James<span class="pl-pds">"</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>james@example.com<span class="pl-pds">"</span></span></span>
+<span class="pl-s1">        )</span>
+<span class="pl-s1">    ));</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>See the <a href="https://bugsnag.com/docs/notifiers/php#setbeforenotifyfunction">setBeforeNotifyFunction</a>
+documentation on the <code>bugsnag-php</code> library for more information.</p>
+
+<h2>
+<a id="sending-custom-errors-or-non-fatal-exceptions" class="anchor" href="#sending-custom-errors-or-non-fatal-exceptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sending Custom Errors or Non-Fatal Exceptions</h2>
+
+<p>You can easily tell Bugsnag about non-fatal or caught exceptions by 
+calling <code>Bugsnag::notifyException</code>:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">Bugsnag</span><span class="pl-k">::</span>notifyException(<span class="pl-k">new</span> <span class="pl-c1">Exception</span>(<span class="pl-s"><span class="pl-pds">"</span>Something bad happened<span class="pl-pds">"</span></span>));</span></pre></div>
+
+<p>You can also send custom errors to Bugsnag with <code>Bugsnag::notifyError</code>:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">Bugsnag</span><span class="pl-k">::</span>notifyError(<span class="pl-s"><span class="pl-pds">"</span>ErrorType<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Something bad happened here too<span class="pl-pds">"</span></span>);</span></pre></div>
+
+<p>Both of these functions can also be passed an optional <code>$metaData</code> parameter,
+which should take the following format:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$metaData</span> <span class="pl-k">=</span>  <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>James<span class="pl-pds">"</span></span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>james@example.com<span class="pl-pds">"</span></span></span>
+<span class="pl-s1">    )</span>
+<span class="pl-s1">);</span></pre></div>
+
+<h2>
+<a id="error-reporting-levels" class="anchor" href="#error-reporting-levels" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Error Reporting Levels</h2>
+
+<p>By default we'll use the value of <code>error_reporting</code> from your <code>php.ini</code>
+or any value you set at runtime using the <code>error_reporting(...)</code> function.</p>
+
+<p>If you'd like to send different levels of errors to Bugsnag, you can call
+<code>setErrorReportingLevel</code>, for example:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">Bugsnag</span><span class="pl-k">::</span>setErrorReportingLevel(<span class="pl-c1">E_ALL</span> <span class="pl-k">&amp;</span> <span class="pl-k">~</span><span class="pl-c1">E_NOTICE</span>);</span></pre></div>
+
+<h2>
+<a id="additional-configuration" class="anchor" href="#additional-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Additional Configuration</h2>
+
+<p>The <a href="https://bugsnag.com/docs/notifiers/php">Bugsnag PHP Client</a>
+is available as <code>Bugsnag</code>, which allows you to set various
+configuration options, for example:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">Bugsnag</span><span class="pl-k">::</span>setReleaseStage(<span class="pl-s"><span class="pl-pds">"</span>production<span class="pl-pds">"</span></span>);</span></pre></div>
+
+<p>See the <a href="https://bugsnag.com/docs/notifiers/php#additional-configuration">Bugsnag Notifier for PHP documentation</a>
+for full configuration details.</p>
+
+<h2>
+<a id="reporting-bugs-or-feature-requests" class="anchor" href="#reporting-bugs-or-feature-requests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reporting Bugs or Feature Requests</h2>
+
+<p>Please report any bugs or feature requests on the github issues page for this
+project here:</p>
+
+<p><a href="https://github.com/bugsnag/bugsnag-laravel/issues">https://github.com/bugsnag/bugsnag-laravel/issues</a></p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ul>
+<li>  <a href="https://help.github.com/articles/fork-a-repo">Fork</a> the <a href="https://github.com/bugsnag/bugsnag-laravel">notifier on github</a>
+</li>
+<li>  Commit and push until you are happy with your contribution</li>
+<li>  Run the tests to make sure they all pass: <code>composer install &amp;&amp; ./vendor/bin/phpunit</code>
+</li>
+<li>  <a href="https://help.github.com/articles/using-pull-requests">Make a pull request</a>
+</li>
+<li>  Thanks!</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>The Bugsnag Laravel notifier is free software released under the MIT License. 
+See <a href="https://github.com/bugsnag/bugsnag-laravel/blob/master/LICENSE.txt">LICENSE.txt</a> for details.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/cfralick">cfralick</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-64586508-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
